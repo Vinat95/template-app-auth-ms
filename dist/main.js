@@ -195,7 +195,7 @@ module.exports = function (updatedModules, renewedModules) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(4);
 const app_module_1 = __webpack_require__(5);
-const swagger_1 = __webpack_require__(20);
+const swagger_1 = __webpack_require__(16);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const config = new swagger_1.DocumentBuilder()
@@ -242,8 +242,8 @@ const app_controller_1 = __webpack_require__(7);
 const app_service_1 = __webpack_require__(8);
 const response_interceptor_1 = __webpack_require__(12);
 const response_service_1 = __webpack_require__(14);
-const response_middleware_1 = __webpack_require__(15);
-const jwt_strategy_1 = __webpack_require__(16);
+const response_middleware_1 = __webpack_require__(18);
+const jwt_strategy_1 = __webpack_require__(19);
 const axios_1 = __webpack_require__(9);
 let AppModule = class AppModule {
     configure(consumer) {
@@ -287,29 +287,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppController = void 0;
 const common_1 = __webpack_require__(6);
 const app_service_1 = __webpack_require__(8);
 const response_interceptor_1 = __webpack_require__(12);
+const update_user_dto_1 = __webpack_require__(15);
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
-    async getUserRole(id) {
-        const userRole = await this.appService.getUserDetails(id);
-        return userRole;
+    async getUserDetails(id) {
+        const userDetails = await this.appService.getUserDetails(id);
+        return userDetails;
+    }
+    async UpdateUserDetails(id, details) {
+        const userDetails = await this.appService.UpdateUserDetails(id, details);
+        return userDetails;
     }
 };
 exports.AppController = AppController;
 __decorate([
-    (0, common_1.Get)(':id/details'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(":id/details"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "getUserRole", null);
+], AppController.prototype, "getUserDetails", null);
+__decorate([
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_b = typeof update_user_dto_1.UpdateUserDto !== "undefined" && update_user_dto_1.UpdateUserDto) === "function" ? _b : Object]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "UpdateUserDetails", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     (0, common_1.UseInterceptors)(response_interceptor_1.ResponseInterceptor),
@@ -344,15 +357,15 @@ let AppService = class AppService {
         this.httpService = httpService;
     }
     async getToken() {
-        const url = 'https://dev-lwot5qle50opfs87.eu.auth0.com/oauth/token';
+        const url = "https://dev-lwot5qle50opfs87.eu.auth0.com/oauth/token";
         const data = {
-            grant_type: 'client_credentials',
-            client_id: 'Q7643334vDbxyqXJH1QFsiYEqNOQpncK',
-            client_secret: 't93MnEbbtVW4ZaS0FS8ERu6-sRSttQO8l8F0OaZCn622Xwvq50Q5HNO1BRDEr5pE',
-            audience: 'https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/',
+            grant_type: "client_credentials",
+            client_id: "Q7643334vDbxyqXJH1QFsiYEqNOQpncK",
+            client_secret: "t93MnEbbtVW4ZaS0FS8ERu6-sRSttQO8l8F0OaZCn622Xwvq50Q5HNO1BRDEr5pE",
+            audience: "https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/",
         };
         const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            "Content-Type": "application/x-www-form-urlencoded",
         };
         const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post(url, qs.stringify(data), { headers }));
         return response.data.access_token;
@@ -362,9 +375,19 @@ let AppService = class AppService {
         const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
         const headers = {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         };
         const response = await (0, rxjs_1.firstValueFrom)(this.httpService.get(url, { headers }));
+        return response.data;
+    }
+    async UpdateUserDetails(id, details) {
+        const token = await this.getToken();
+        const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        };
+        const response = await (0, rxjs_1.firstValueFrom)(this.httpService.patch(url, details, { headers }));
         return response.data;
     }
 };
@@ -511,6 +534,69 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateUserDto = exports.UserMetadata = void 0;
+const swagger_1 = __webpack_require__(16);
+const class_validator_1 = __webpack_require__(17);
+class UserMetadata {
+}
+exports.UserMetadata = UserMetadata;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], UserMetadata.prototype, "nickname", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], UserMetadata.prototype, "profile_image_base64", void 0);
+class UpdateUserDto {
+}
+exports.UpdateUserDto = UpdateUserDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "The email of the user",
+        example: "user@example.com",
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateUserDto.prototype, "email", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", UserMetadata)
+], UpdateUserDto.prototype, "user_metadata", void 0);
+
+
+/***/ }),
+/* 16 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("@nestjs/swagger");
+
+/***/ }),
+/* 17 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("class-validator");
+
+/***/ }),
+/* 18 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ResponseMiddleware = void 0;
@@ -540,7 +626,7 @@ exports.ResponseMiddleware = ResponseMiddleware = __decorate([
 
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -557,9 +643,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtStrategy = void 0;
 const common_1 = __webpack_require__(6);
-const passport_1 = __webpack_require__(17);
-const passport_jwt_1 = __webpack_require__(18);
-const jwks_rsa_1 = __webpack_require__(19);
+const passport_1 = __webpack_require__(20);
+const passport_jwt_1 = __webpack_require__(21);
+const jwks_rsa_1 = __webpack_require__(22);
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor() {
         super({
@@ -588,32 +674,25 @@ exports.JwtStrategy = JwtStrategy = __decorate([
 
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("@nestjs/passport");
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("passport-jwt");
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("jwks-rsa");
-
-/***/ }),
-/* 20 */
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("@nestjs/swagger");
 
 /***/ })
 /******/ 	]);
@@ -677,7 +756,7 @@ module.exports = require("@nestjs/swagger");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("b97f9202cb216bd9c919")
+/******/ 		__webpack_require__.h = () => ("d366ae49965811cf1769")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

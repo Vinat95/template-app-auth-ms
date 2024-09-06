@@ -1,28 +1,29 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
-import { AxiosResponse } from 'axios';
-import { firstValueFrom } from 'rxjs';
-import * as qs from 'qs';
+import { HttpService } from "@nestjs/axios";
+import { Injectable } from "@nestjs/common";
+import { AxiosResponse } from "axios";
+import { firstValueFrom } from "rxjs";
+import * as qs from "qs";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 @Injectable()
 export class AppService {
   constructor(private readonly httpService: HttpService) {}
   private async getToken(): Promise<string> {
-    const url = 'https://dev-lwot5qle50opfs87.eu.auth0.com/oauth/token';
+    const url = "https://dev-lwot5qle50opfs87.eu.auth0.com/oauth/token";
     const data = {
-      grant_type: 'client_credentials',
-      client_id: 'Q7643334vDbxyqXJH1QFsiYEqNOQpncK',
+      grant_type: "client_credentials",
+      client_id: "Q7643334vDbxyqXJH1QFsiYEqNOQpncK",
       client_secret:
-        't93MnEbbtVW4ZaS0FS8ERu6-sRSttQO8l8F0OaZCn622Xwvq50Q5HNO1BRDEr5pE',
-      audience: 'https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/',
+        "t93MnEbbtVW4ZaS0FS8ERu6-sRSttQO8l8F0OaZCn622Xwvq50Q5HNO1BRDEr5pE",
+      audience: "https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/",
     };
 
     const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
     };
 
     const response = await firstValueFrom(
-      this.httpService.post(url, qs.stringify(data), { headers }),
+      this.httpService.post(url, qs.stringify(data), { headers })
     );
 
     return response.data.access_token;
@@ -34,12 +35,26 @@ export class AppService {
     const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
     const headers = {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
     const response = await firstValueFrom(
-      this.httpService.get(url, { headers }),
+      this.httpService.get(url, { headers })
     );
     return response.data;
+  }
+
+  async UpdateUserDetails(id: string, details: UpdateUserDto): Promise<any> {
+    const token = await this.getToken();
+
+    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+      const response = await firstValueFrom(
+        this.httpService.patch(url, details, { headers })
+      );
+      return response.data;
   }
 }
