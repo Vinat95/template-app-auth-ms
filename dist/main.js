@@ -298,13 +298,13 @@ let AppController = class AppController {
         this.appService = appService;
     }
     async getUserRole(id) {
-        const userRole = await this.appService.getUserRole(id);
+        const userRole = await this.appService.getUserDetails(id);
         return userRole;
     }
 };
 exports.AppController = AppController;
 __decorate([
-    (0, common_1.Get)(':id/role'),
+    (0, common_1.Get)(':id/details'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -357,9 +357,9 @@ let AppService = class AppService {
         const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post(url, qs.stringify(data), { headers }));
         return response.data.access_token;
     }
-    async getUserRole(id) {
+    async getUserDetails(id) {
         const token = await this.getToken();
-        const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}/roles`;
+        const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
         const headers = {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -677,7 +677,7 @@ module.exports = require("@nestjs/swagger");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("ebfc48102c7494f1741a")
+/******/ 		__webpack_require__.h = () => ("b97f9202cb216bd9c919")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

@@ -7,9 +7,9 @@ import { ResponseInterceptor } from 'response/response.interceptor';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(':id/role')
+  @Get(':id/details')
   async getUserRole(@Param('id') id: string) {
-    const userRole = await this.appService.getUserRole(id);
+    const userRole = await this.appService.getUserDetails(id);
     return userRole;
   }
 }

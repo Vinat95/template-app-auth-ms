@@ -28,10 +28,10 @@ export class AppService {
     return response.data.access_token;
   }
 
-  async getUserRole(id: string): Promise<any> {
+  async getUserDetails(id: string): Promise<any> {
     const token = await this.getToken();
 
-    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}/roles`;
+    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
     const headers = {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
