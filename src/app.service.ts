@@ -1,6 +1,5 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { AxiosResponse } from "axios";
 import { firstValueFrom } from "rxjs";
 import * as qs from "qs";
 import { UpdateUserDto } from "./dto/update-user.dto";
