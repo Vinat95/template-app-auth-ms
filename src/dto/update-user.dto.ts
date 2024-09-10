@@ -5,7 +5,7 @@ export class UserMetadata {
   @ApiProperty()
   nickname: string;
   @ApiProperty()
-  profile_image_base64: string;
+  profile_image: string;
 }
 
 export class UpdateUserDto {

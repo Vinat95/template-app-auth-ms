@@ -14,7 +14,7 @@ import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
 export class UploadController {
   constructor(private readonly s3Service: S3Service) {}
 
-  @Post('upload')
+  @Post()
   @UseInterceptors(FileInterceptor("file")) // 'file' è il nome del campo dell'input file
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -42,18 +42,21 @@ export class UploadController {
     },
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.s3Service.uploadImageToS3(file);
+    let result;
+    if (file) {
+      result = await this.s3Service.uploadImageToS3(file);
+    }
     return {
       message: "File uploaded successfully",
-      url: result.Location, // URL dell'immagine caricata
+      url: result ? result.Location : "", // URL dell'immagine caricata
     };
   }
 
-  @Delete(':key')
-  async deleteFile(@Param('key') key: string) {
+  @Delete(":key")
+  async deleteFile(@Param("key") key: string) {
     const result = await this.s3Service.deleteImageFromS3(key);
     return {
-      message: 'File deleted successfully',
+      message: "File deleted successfully",
       data: result,
     };
   }
