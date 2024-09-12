@@ -17,6 +17,10 @@ export class UpdateUserDto {
   @IsOptional()
   email?: string;
 
+  @IsString()
+  @IsOptional()
+  picture?: string;
+
   @ApiProperty()
   @IsOptional()
   user_metadata: UserMetadata;
