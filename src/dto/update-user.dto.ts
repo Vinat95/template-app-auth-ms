@@ -17,6 +17,7 @@ export class UpdateUserDto {
   @IsOptional()
   email?: string;
 
+  @ApiProperty()
   @IsString()
   @IsOptional()
   picture?: string;
