@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Delete,
+  InternalServerErrorException,
   Param,
   Post,
   UploadedFile,
@@ -68,10 +69,16 @@ export class UploadController {
 
   @Delete(":key")
   async deleteFile(@Param("key") key: string) {
-    const result = await this.s3Service.deleteImageFromS3(key);
-    return {
-      message: "File deleted successfully",
-      data: result,
-    };
+    try {
+      const result = await this.s3Service.deleteImageFromS3(key);
+      return {
+        message: "File deleted successfully",
+        data: result,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Si è verificato un errore durante l'eliminazione del file."
+      );
+    }
   }
 }
