@@ -6,6 +6,8 @@ import {
   Patch,
   Post,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { ResponseInterceptor } from "response/response.interceptor";
@@ -23,6 +25,7 @@ export class AppController {
   }
 
   @Patch(":id")
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   async UpdateUserDetails(
     @Param("id") id: string,
     @Body() details: UpdateUserDto

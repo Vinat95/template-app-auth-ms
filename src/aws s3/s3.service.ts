@@ -18,7 +18,6 @@ export class S3Service {
     );
     this.awsRegion = this.configService.get<string>("AWS_REGION");
     this.awsBucketName = this.configService.get<string>("AWS_BUCKET_NAME");
-    console.log(this.awsAccessKeyId)
     this.s3 = new AWS.S3({
       accessKeyId: this.awsAccessKeyId,
       secretAccessKey: this.awsSecretAccessKey,

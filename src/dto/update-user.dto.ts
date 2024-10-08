@@ -1,10 +1,26 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, IsEmail } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsNotEmpty,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 
 export class UserMetadata {
-  @ApiProperty()
+  @ApiProperty({
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
   nickname: string;
+
   @ApiProperty()
+  @IsOptional()
+  @IsString()
   profile_image: string;
 }
 
@@ -12,17 +28,23 @@ export class UpdateUserDto {
   @ApiProperty({
     description: "The email of the user",
     example: "user@example.com",
+    required: true,
   })
+  @IsNotEmpty()
   @IsEmail()
-  @IsOptional()
-  email?: string;
+  @IsString()
+  @MinLength(1)
+  email: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
   picture?: string;
 
-  @ApiProperty()
-  @IsOptional()
+  @ApiProperty({
+    type: UserMetadata,
+  })
+  @ValidateNested()
+  @Type(() => UserMetadata)
   user_metadata: UserMetadata;
 }
