@@ -4,7 +4,6 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
