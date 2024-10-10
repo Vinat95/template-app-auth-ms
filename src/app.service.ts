@@ -10,6 +10,7 @@ import {
 import { firstValueFrom } from "rxjs";
 import * as qs from "qs";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { RegisterUserDto } from "./dto/register-user.dto";
 
 @Injectable()
 export class AppService {
@@ -60,6 +61,22 @@ export class AppService {
     };
     const response = await firstValueFrom(
       this.httpService.patch(url, details, { headers })
+    );
+    return response.data;
+  }
+
+  async registerUser(userInfo: RegisterUserDto): Promise<any> {
+    userInfo.client_id = "qnPQDHhKfJEZL8CfY0EdZpbEAWWaZo7D";
+    userInfo.connection = "Username-Password-Authentication";
+    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/dbconnections/signup`;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const response = await firstValueFrom(
+      this.httpService.post(url, userInfo, {
+        headers,
+      })
     );
     return response.data;
   }

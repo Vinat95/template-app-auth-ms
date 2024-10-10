@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
@@ -11,6 +12,7 @@ import {
 import { AppService } from "./app.service";
 import { ResponseInterceptor } from "response/response.interceptor";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { RegisterUserDto } from "./dto/register-user.dto";
 
 @Controller()
 @UseInterceptors(ResponseInterceptor)
@@ -21,6 +23,11 @@ export class AppController {
   async getUserDetails(@Param("id") id: string) {
     const userDetails = await this.appService.getUserDetails(id);
     return userDetails;
+  }
+
+  @Post("/register")
+  async registerUser(@Body() user: RegisterUserDto) {
+    return await this.appService.registerUser(user);
   }
 
   @Patch(":id")
