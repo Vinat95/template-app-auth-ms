@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { S3Service } from "./s3.service";
 import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
+import { JwtAuthGuard } from "src/auth.guard";
 
 @Controller("upload")
 export class UploadController {
@@ -18,6 +20,7 @@ export class UploadController {
 
   @Post()
   @UseInterceptors(FileInterceptor("file"))
+  @UseGuards(JwtAuthGuard)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     description: "File to upload",
@@ -68,6 +71,7 @@ export class UploadController {
   }
 
   @Delete(":key")
+  @UseGuards(JwtAuthGuard)
   async deleteFile(@Param("key") key: string) {
     try {
       const result = await this.s3Service.deleteImageFromS3(key);

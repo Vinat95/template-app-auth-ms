@@ -26,7 +26,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         message = `Richiesta non valida: Dati non conformi`;
         break;
       case 401:
-        message = "Autenticazione fallita.";
+        message = "Accesso negato.";
         break;
       case 403:
         message = "Accesso negato.";

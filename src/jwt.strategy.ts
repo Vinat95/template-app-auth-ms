@@ -1,9 +1,9 @@
 // jwt.strategy.ts
-import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import * as jwksRsa from 'jwks-rsa';
-import { passportJwtSecret } from 'jwks-rsa';
+import { Injectable } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import * as jwksRsa from "jwks-rsa";
+import { passportJwtSecret } from "jwks-rsa";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -17,9 +17,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         jwksRequestsPerMinute: 5,
         jwksUri: `https://dev-lwot5qle50opfs87.eu.auth0.com/.well-known/jwks.json`,
       }),
-      audience: 'https://my-public-api',
+      audience: "https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/",
       issuer: `https://dev-lwot5qle50opfs87.eu.auth0.com/`,
-      algorithms: ['RS256'],
+      algorithms: ["RS256"],
     });
   }
 

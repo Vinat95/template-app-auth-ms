@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
@@ -13,6 +14,7 @@ import { AppService } from "./app.service";
 import { ResponseInterceptor } from "response/response.interceptor";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { RegisterUserDto } from "./dto/register-user.dto";
+import { JwtAuthGuard } from "./auth.guard";
 
 @Controller()
 @UseInterceptors(ResponseInterceptor)
@@ -20,6 +22,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get(":id/details")
+  @UseGuards(JwtAuthGuard)
   async getUserDetails(@Param("id") id: string) {
     const userDetails = await this.appService.getUserDetails(id);
     return userDetails;
@@ -31,6 +34,7 @@ export class AppController {
   }
 
   @Patch(":id")
+  @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async UpdateUserDetails(
     @Param("id") id: string,
