@@ -21,7 +21,7 @@ import { JwtAuthGuard } from "./auth.guard";
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(":id/details")
+  @Get("api/:id/details")
   @UseGuards(JwtAuthGuard)
   async getUserDetails(@Param("id") id: string) {
     const userDetails = await this.appService.getUserDetails(id);
@@ -33,7 +33,7 @@ export class AppController {
     return await this.appService.registerUser(user);
   }
 
-  @Patch(":id")
+  @Patch("api/:id")
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async UpdateUserDetails(

@@ -20,7 +20,6 @@ export class UploadController {
 
   @Post()
   @UseInterceptors(FileInterceptor("file"))
-  @UseGuards(JwtAuthGuard)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     description: "File to upload",
@@ -70,7 +69,7 @@ export class UploadController {
     };
   }
 
-  @Delete(":key")
+  @Delete("api/:key")
   @UseGuards(JwtAuthGuard)
   async deleteFile(@Param("key") key: string) {
     try {
