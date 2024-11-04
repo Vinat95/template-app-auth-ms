@@ -1,29 +1,25 @@
 import { HttpService } from "@nestjs/axios";
 import {
-  BadRequestException,
-  ForbiddenException,
   Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { firstValueFrom } from "rxjs";
 import * as qs from "qs";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { RegisterUserDto } from "./dto/register-user.dto";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AppService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService, private configService: ConfigService) {}
 
   private async getToken(): Promise<string> {
-    const url = "https://dev-lwot5qle50opfs87.eu.auth0.com/oauth/token";
+    const url = this.configService.get<string>("TOKEN_URL");
     const data = {
-      grant_type: "client_credentials",
-      client_id: "Q7643334vDbxyqXJH1QFsiYEqNOQpncK",
+      grant_type: this.configService.get<string>("GRANT_TYPE"),
+      client_id: this.configService.get<string>("CLIENT_ID"),
       client_secret:
-        "t93MnEbbtVW4ZaS0FS8ERu6-sRSttQO8l8F0OaZCn622Xwvq50Q5HNO1BRDEr5pE",
-      audience: "https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/",
+      this.configService.get<string>("CLIENT_SECRET"),
+      audience: this.configService.get<string>("HOST") + '/',
     };
 
     const headers = {
@@ -40,7 +36,7 @@ export class AppService {
   async getUserDetails(id: string): Promise<any> {
     const token = await this.getToken();
 
-    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
+    const url = `${this.configService.get<string>("HOST")}/users/${id}`;
     const headers = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -54,7 +50,7 @@ export class AppService {
 
   async UpdateUserDetails(id: string, details: UpdateUserDto): Promise<any> {
     const token = await this.getToken();
-    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/api/v2/users/${id}`;
+    const url = `${this.configService.get<string>("HOST")}/users/${id}`;
     const headers = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -66,9 +62,9 @@ export class AppService {
   }
 
   async registerUser(userInfo: RegisterUserDto): Promise<any> {
-    userInfo.client_id = "qnPQDHhKfJEZL8CfY0EdZpbEAWWaZo7D";
-    userInfo.connection = "Username-Password-Authentication";
-    const url = `https://dev-lwot5qle50opfs87.eu.auth0.com/dbconnections/signup`;
+    userInfo.client_id = this.configService.get<string>("SIGNUP_CLIENT_ID");
+    userInfo.connection = this.configService.get<string>("SIGNUP_CONNECTION");
+    const url = this.configService.get<string>("SIGNUP_URL");
     const headers = {
       "Content-Type": "application/json",
     };
