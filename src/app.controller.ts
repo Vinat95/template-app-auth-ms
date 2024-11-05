@@ -16,24 +16,24 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { RegisterUserDto } from "./dto/register-user.dto";
 import { JwtAuthGuard } from "./auth.guard";
 
-@Controller()
+@Controller('users')
 @UseInterceptors(ResponseInterceptor)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get("api/:id/details")
+  @Get(":id/detail")
   @UseGuards(JwtAuthGuard)
   async getUserDetails(@Param("id") id: string) {
     const userDetails = await this.appService.getUserDetails(id);
     return userDetails;
   }
 
-  @Post("/register")
+  @Post("/signup")
   async registerUser(@Body() user: RegisterUserDto) {
     return await this.appService.registerUser(user);
   }
 
-  @Patch("api/:id")
+  @Patch(":id")
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async UpdateUserDetails(

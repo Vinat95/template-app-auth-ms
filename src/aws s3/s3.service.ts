@@ -25,7 +25,7 @@ export class S3Service {
     });
   }
 
-  async uploadImageToS3(file: Express.Multer.File): Promise<any> {
+  async uploadImage(file: Express.Multer.File): Promise<any> {
     const key = `${uuid()}-${file.originalname}`; // Genera un nome univoco per il file
 
     const params = {

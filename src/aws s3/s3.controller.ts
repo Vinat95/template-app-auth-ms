@@ -14,11 +14,11 @@ import { S3Service } from "./s3.service";
 import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth.guard";
 
-@Controller("upload")
+@Controller("aws")
 export class UploadController {
   constructor(private readonly s3Service: S3Service) {}
 
-  @Post()
+  @Post('upload')
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -56,7 +56,7 @@ export class UploadController {
       }
       // Caricamento del file su S3
       try {
-        result = await this.s3Service.uploadImageToS3(file);
+        result = await this.s3Service.uploadImage(file);
       } catch (error) {
         // Gestione dell'errore di caricamento
         throw new BadRequestException("Errore durante il caricamento del file");
@@ -69,7 +69,7 @@ export class UploadController {
     };
   }
 
-  @Delete("api/:key")
+  @Delete("images/:key")
   @UseGuards(JwtAuthGuard)
   async deleteFile(@Param("key") key: string) {
     try {
