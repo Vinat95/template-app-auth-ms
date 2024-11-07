@@ -11,6 +11,7 @@ import { UploadController } from "./aws s3/s3.controller";
 import { S3Service } from "./aws s3/s3.service";
 import { memoryStorage } from "multer";
 import { ConfigModule } from '@nestjs/config';
+import { Auth0Provider } from "./auth/providers/auth0.provider";
 
 @Module({
   imports: [
@@ -29,7 +30,12 @@ import { ConfigModule } from '@nestjs/config';
     ResponseInterceptor,
     JwtStrategy,
     S3Service,
+    {
+      provide: 'IDENTITY_PROVIDER',
+      useClass: Auth0Provider, // Cambia qui per sostituire il provider in futuro
+    },
   ],
+  exports: ['IDENTITY_PROVIDER'],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
