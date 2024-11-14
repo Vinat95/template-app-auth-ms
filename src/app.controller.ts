@@ -16,7 +16,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { RegisterUserDto } from "./dto/register-user.dto";
 import { JwtAuthGuard } from "./auth.guard";
 
-@Controller('users')
+@Controller("users")
 @UseInterceptors(ResponseInterceptor)
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -26,6 +26,13 @@ export class AppController {
   async getUserDetails(@Param("id") id: string) {
     const userDetails = await this.appService.getUserDetails(id);
     return userDetails;
+  }
+
+  @Get(":id/profile-image")
+  @UseGuards(JwtAuthGuard)
+  async getUserProfileImage(@Param("id") id: string) {
+    const userProfileImage = await this.appService.getUserProfileImage(id);
+    return userProfileImage;
   }
 
   @Post("/signup")

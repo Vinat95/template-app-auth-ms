@@ -14,6 +14,10 @@ export class AppService {
     return this.identityProvider.getUserDetails(id);
   }
 
+  async getUserProfileImage(id: string): Promise<any> {
+    return this.identityProvider.getUserProfileImage(id);
+  }
+
   async UpdateUserDetails(id: string, details: UpdateUserDto) {
     return this.identityProvider.UpdateUserDetails(id, details);
   }
