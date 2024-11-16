@@ -4,13 +4,13 @@ import { AppService } from "./app.service";
 import { ResponseInterceptor } from "response/response.interceptor";
 import { ResponseService } from "response/response.service";
 import { ResponseMiddleware } from "response/response.middleware";
-import { JwtStrategy } from "./jwt.strategy";
+import { JwtStrategy } from "./jwt/jwt.strategy";
 import { HttpModule } from "@nestjs/axios";
 import { MulterModule } from "@nestjs/platform-express";
 import { UploadController } from "./aws s3/s3.controller";
 import { S3Service } from "./aws s3/s3.service";
 import { memoryStorage } from "multer";
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from "@nestjs/config";
 import { Auth0Provider } from "./auth/providers/auth0.provider";
 
 @Module({
@@ -31,11 +31,11 @@ import { Auth0Provider } from "./auth/providers/auth0.provider";
     JwtStrategy,
     S3Service,
     {
-      provide: 'IDENTITY_PROVIDER',
+      provide: "IDENTITY_PROVIDER",
       useClass: Auth0Provider, // Cambia qui per sostituire il provider in futuro
     },
   ],
-  exports: ['IDENTITY_PROVIDER'],
+  exports: ["IDENTITY_PROVIDER"],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
