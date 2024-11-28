@@ -5,7 +5,7 @@ import { HttpService } from "@nestjs/axios";
 import { firstValueFrom } from "rxjs";
 import * as qs from "qs";
 import { IIdentityProvider } from "../identity-provider.interface";
-import { RegisterUserDto } from "src/dto/register-user.dto";
+import { RegisterUserDto, UserLogin } from "src/dto/register-user.dto";
 import { UpdateUserDto } from "src/dto/update-user.dto";
 
 @Injectable()
@@ -33,6 +33,37 @@ export class Auth0Provider implements IIdentityProvider {
     );
 
     return response.data.access_token;
+  }
+
+  async login(userInfo: UserLogin): Promise<any> {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const url = this.configService.get<string>("TOKEN_AUTH0_URL");
+    const clientId = this.configService.get<string>("AUTH0_CLIENT_ID");
+    const clientSecret = this.configService.get<string>("AUTH0_CLIENT_SECRET");
+    const audience = this.configService.get<string>("AUTH0_AUDIENCE");
+    const grantType = "password";
+
+    const data = {
+      client_id: clientId,
+      client_secret: clientSecret,
+      audience: audience,
+      grant_type: grantType,
+      username: userInfo.username,
+      password: userInfo.password,
+      scope: "offline_access openid profile email", // Richiedi refresh token e informazioni sull'utente
+    };
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(url, data, { headers })
+      );
+
+      return response.data; // Restituisce access token e refresh token
+    } catch (error) {
+      throw new Error(`Errore nella generazione dei token: ${error.message}`);
+    }
   }
 
   async getUserDetails(id: string): Promise<any> {

@@ -13,7 +13,7 @@ import {
 import { AppService } from "./app.service";
 import { ResponseInterceptor } from "response/response.interceptor";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { RegisterUserDto } from "./dto/register-user.dto";
+import { RegisterUserDto, UserLogin } from "./dto/register-user.dto";
 import { JwtAuthGuard } from "./auth.guard";
 
 @Controller("users")
@@ -33,6 +33,11 @@ export class AppController {
   async getUserProfileImage(@Param("id") id: string) {
     const userProfileImage = await this.appService.getUserProfileImage(id);
     return userProfileImage;
+  }
+
+  @Post("/login")
+  async login(@Body() user: UserLogin) {
+    return await this.appService.loginUser(user);
   }
 
   @Post("/signup")

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { RegisterUserDto } from "./dto/register-user.dto";
+import { RegisterUserDto, UserLogin } from "./dto/register-user.dto";
 import { IIdentityProvider } from "./auth/identity-provider.interface";
 
 @Injectable()
@@ -24,5 +24,9 @@ export class AppService {
 
   async registerUser(userInfo: RegisterUserDto) {
     return this.identityProvider.registerUser(userInfo);
+  }
+
+  async loginUser(userInfo: UserLogin) {
+    return this.identityProvider.login(userInfo);
   }
 }

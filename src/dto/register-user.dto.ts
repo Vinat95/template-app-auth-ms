@@ -19,6 +19,27 @@ export class UserMetadata {
   nickname: string;
 }
 
+export class UserLogin {
+  @ApiProperty({
+    description: "The email of the user",
+    example: "user@example.com",
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsEmail()
+  @IsString()
+  @MinLength(1)
+  username: string;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  password: string;
+}
+
 export class RegisterUserDto {
   @ApiProperty({
     required: true,
